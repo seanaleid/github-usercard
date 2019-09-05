@@ -85,7 +85,7 @@ axios.get('http://api.github.com/users/seanaleid')
     console.log(response);
     const getInfo = response.data;
     const passMe = getPromise(getInfo);
-    cards.appendChild(passMe);
+    cards.prepend(passMe);
     
 })
 .catch( err => {
@@ -120,7 +120,8 @@ followersArray.forEach(person =>{
   axios.get(`https://api.github.com/users/${person}`)
   .then(info =>{
     // console.log(info);
-    const personCard = getPromise(info.data);
+    const infoData = info.data;
+    const personCard = getPromise(infoData);
     cards.appendChild(personCard);
   })
   .catch(err => {
@@ -193,6 +194,8 @@ pFollowers.textContent = `Followers: ${object.followers}`;
 pFollowing.textContent = `Following: ${object.following}`;
 pBio.textContent = `Bio: ${object.bio}`;
 // githubContributions.src = 'https://github.com/users/seanaleid/contributions';
+
+
 
 return div
 }
