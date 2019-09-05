@@ -114,7 +114,19 @@ axios.get('http://api.github.com/users/seanaleid')
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['BaoPham92', 'Mary-Clayton', 'DannyManzietti', 'mxxt1', 'vanessamclendon2'];
+
+followersArray.forEach(person =>{
+  axios.get(`https://api.github.com/users/${person}`)
+  .then(info =>{
+    // console.log(info);
+    const personCard = getPromise(info.data);
+    cards.appendChild(personCard);
+  })
+  .catch(err => {
+    console.log('You did something wrong, so now you have no followers');
+  })
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -149,6 +161,7 @@ const div = document.createElement('div'),
       pFollowers = document.createElement('p'),
       pFollowing = document.createElement('p'),
       pBio = document.createElement('p');
+      // githubContributions = document.createElement('div');
 
 //append the children
 div.appendChild(img);
@@ -161,28 +174,25 @@ pProfile.appendChild(a);
 divCardInfo.appendChild(pFollowers);
 divCardInfo.appendChild(pFollowing);
 divCardInfo.appendChild(pBio);
+// divCardInfo.appendChild(githubContributions);
 
 //add the classes
 div.classList.add('card');
 divCardInfo.classList.add('card-info');
 h3.classList.add('name');
-pUserName.classList.add('user');
+pUserName.classList.add('username');
 
 //add content
 img.src = object.avatar_url;
 h3.textContent = object.name;
 pUserName.textContent = object.login;
 pLocation.textContent = `Location: ${object.location}`;
+// pProfile.textContent = `Profile ${a}`;
 a.textContent = object.avatar_url;
 pFollowers.textContent = `Followers: ${object.followers}`;
 pFollowing.textContent = `Following: ${object.following}`;
 pBio.textContent = `Bio: ${object.bio}`;
-
-
-// const cards = document.querySelector('.cards');
-// cards.appendChild(div);
-// console.log("does this work?")
-
+// githubContributions.src = 'https://github.com/users/seanaleid/contributions';
 
 return div
 }
