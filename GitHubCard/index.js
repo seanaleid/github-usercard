@@ -123,6 +123,8 @@ followersArray.forEach(person =>{
     const infoData = info.data;
     const personCard = getPromise(infoData);
     cards.appendChild(personCard);
+    
+    
   })
   .catch(err => {
     console.log('You did something wrong, so now you have no followers');
@@ -164,6 +166,21 @@ const div = document.createElement('div'),
       pBio = document.createElement('p');
       // githubContributions = document.createElement('div');
 
+//add content
+img.src = object.avatar_url;
+h3.textContent = object.name;
+pUserName.textContent = object.login;
+pLocation.textContent = `Location: ${object.location}`;
+pProfile.textContent = `Profile: `;
+a.textContent = object.html_url;
+//make sure the text content is hoisted above the appends
+a.href = object.html_url;
+//make sure to set the text content and href the same
+pFollowers.textContent = `Followers: ${object.followers}`;
+pFollowing.textContent = `Following: ${object.following}`;
+pBio.textContent = `Bio: ${object.bio}`;
+// githubContributions.src = 'https://github.com/users/seanaleid/contributions';
+
 //append the children
 div.appendChild(img);
 div.appendChild(divCardInfo);
@@ -182,20 +199,6 @@ div.classList.add('card');
 divCardInfo.classList.add('card-info');
 h3.classList.add('name');
 pUserName.classList.add('username');
-
-//add content
-img.src = object.avatar_url;
-h3.textContent = object.name;
-pUserName.textContent = object.login;
-pLocation.textContent = `Location: ${object.location}`;
-// pProfile.textContent = `Profile ${a}`;
-a.textContent = object.avatar_url;
-pFollowers.textContent = `Followers: ${object.followers}`;
-pFollowing.textContent = `Following: ${object.following}`;
-pBio.textContent = `Bio: ${object.bio}`;
-// githubContributions.src = 'https://github.com/users/seanaleid/contributions';
-
-
 
 return div
 }
