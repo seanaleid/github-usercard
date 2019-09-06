@@ -3,6 +3,96 @@
            https://api.github.com/users/<your name>
 */
 
+//have the axiso.get('<path>') to access the information from github, but need to assign it to a const to use. Example below gets the information on the page, but breaks the object.
+//V1
+// const data = axios.get('http://api.github.com/users/seanaleid')
+//     .then( response => {
+//         // deal with the response data in here
+//         console.log(response);
+//         // response.data.forEach(item => {
+//         //   let newPromise = getPromise(item);
+//         //   entrypoint.appendChild(newPromise);
+//         // })
+//         // response.data.
+//     })
+//     .catch( err => {
+//         // deal with the error in here
+//         console.log('Boy, go back and check your code because you did something wrong!')
+//     })
+
+
+//Can I use axios data in the component below? --> NO....breaks the code. I need to point my info to the html page.
+//version 2
+// axios.get('http://api.github.com/users/seanaleid')
+//     .then( response => {
+//         // deal with the response data in here
+//         console.log(response);
+//         response.data.function(item =>{
+//           const newCard = getPromise(item);
+//           cards.appendChild(newCard);
+//         })
+//     })
+//     .catch( err => {
+//         // deal with the error in here
+//         console.log('Boy, go back and check your code because you did something wrong!')
+//     })
+
+//I have to call my function into the axios.get .then part....I need to restructure
+//version 3
+// axios.get('http://api.github.com/users/seanaleid')
+// .then( response => {
+//     // deal with the response data in here
+//     console.log(response);
+    
+//     // const newData = response.data;
+//     console.log('does this work?');
+//     const newCard = getPromise(response.data);
+//     const cards = document.querySelector('.cards');
+//     cards.appendChild(div);
+//     console.log("does this work?");
+//     cards.appendChild(newCard);
+    
+// })
+// .catch( err => {
+//     // deal with the error in here
+//     console.log('Boy, go back and check your code because you did something wrong!')
+// })
+
+
+//
+//Version 4
+// axios.get('http://api.github.com/users/seanaleid')
+// .then( response => {
+//     // deal with the response data in here
+//     console.log(response);
+//     console.log('does this work?');
+//     const newCard = getPromise(response.data);
+//     const container = document.querySelector('.container');
+//     container.appendChild(newCard);
+    
+// })
+// .catch( err => {
+//     // deal with the error in here
+//     console.log('Boy, go back and check your code because you did something wrong!')
+// })
+
+//Version 5
+const cards = document.querySelector('.cards');
+
+axios.get('http://api.github.com/users/seanaleid')
+.then( response => {
+    // deal with the response data in here
+    console.log(response);
+    const getInfo = response.data;
+    const passMe = getPromise(getInfo);
+    cards.prepend(passMe);
+    
+})
+.catch( err => {
+    // deal with the error in here
+    console.log('Boy, go back and check your code because you did something wrong!')
+})
+
 /* Step 2: Inspect and study the data coming back, this is YOUR 
    github info! You will need to understand the structure of this 
    data in order to use it to build your component function 
@@ -24,7 +114,22 @@
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+const followersArray = ['BaoPham92', 'Mary-Clayton', 'DannyManzietti', 'mxxt1', 'vanessamclendon2'];
+
+followersArray.forEach(person =>{
+  axios.get(`https://api.github.com/users/${person}`)
+  .then(info =>{
+    // console.log(info);
+    const infoData = info.data;
+    const personCard = getPromise(infoData);
+    cards.appendChild(personCard);
+    
+    
+  })
+  .catch(err => {
+    console.log('You did something wrong, so now you have no followers');
+  })
+})
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
@@ -32,20 +137,75 @@ const followersArray = [];
 <div class="card">
   <img src={image url of user} />
   <div class="card-info">
-    <h3 class="name">{users name}</h3>
-    <p class="username">{users user name}</p>
-    <p>Location: {users location}</p>
+    <h3 class="name">{users name}</h3> //data.name
+    <p class="username">{users user name}</p> //data.login
+    <p>Location: {users location}</p> //data.location
     <p>Profile:  
-      <a href={address to users github page}>{address to users github page}</a>
+      <a href={address to users github page}>{address to users github page}</a> //data.html_url
     </p>
-    <p>Followers: {users followers count}</p>
-    <p>Following: {users following count}</p>
-    <p>Bio: {users bio}</p>
+    <p>Followers: {users followers count}</p> //data.followers
+    <p>Following: {users following count}</p> //data.following
+    <p>Bio: {users bio}</p> //data.bio
   </div>
 </div>
 
 */
 
+function getPromise(object){
+//create new elements from the template above ^
+const div = document.createElement('div'),
+      img = document.createElement('img'),
+      divCardInfo = document.createElement('div'),
+      h3 = document.createElement('h3'),
+      pUserName = document.createElement('p'),
+      pLocation = document.createElement('p'),
+      pProfile = document.createElement('p'),
+      a = document.createElement('a'),
+      pFollowers = document.createElement('p'),
+      pFollowing = document.createElement('p'),
+      pBio = document.createElement('p');
+      // githubContributions = document.createElement('div');
+
+//add content
+img.src = object.avatar_url;
+h3.textContent = object.name;
+pUserName.textContent = object.login;
+pLocation.textContent = `Location: ${object.location}`;
+pProfile.textContent = `Profile: `;
+a.textContent = object.html_url;
+//make sure the text content is hoisted above the appends
+a.href = object.html_url;
+//make sure to set the text content and href the same
+pFollowers.textContent = `Followers: ${object.followers}`;
+pFollowing.textContent = `Following: ${object.following}`;
+pBio.textContent = `Bio: ${object.bio}`;
+// githubContributions.src = 'https://github.com/users/seanaleid/contributions';
+
+//append the children
+div.appendChild(img);
+div.appendChild(divCardInfo);
+divCardInfo.appendChild(h3);
+divCardInfo.appendChild(pUserName);
+divCardInfo.appendChild(pLocation);
+divCardInfo.appendChild(pProfile);
+pProfile.appendChild(a);
+divCardInfo.appendChild(pFollowers);
+divCardInfo.appendChild(pFollowing);
+divCardInfo.appendChild(pBio);
+// divCardInfo.appendChild(githubContributions);
+
+//add the classes
+div.classList.add('card');
+divCardInfo.classList.add('card-info');
+h3.classList.add('name');
+pUserName.classList.add('username');
+
+return div
+}
+
+
+
+// getPromise(data);
 /* List of LS Instructors Github username's: 
   tetondan
   dustinmyers
